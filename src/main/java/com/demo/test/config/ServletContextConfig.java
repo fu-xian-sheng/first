@@ -1,12 +1,11 @@
-package com.noitom.config;
+package com.demo.test.config;
 
+import com.demo.test.filter.URLInterceptor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.noitom.common.Cons;
-import com.noitom.filter.AdminURLInterceptor;
-import com.noitom.filter.ClientURLInterceptor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,9 +31,8 @@ import java.util.TimeZone;
 public class ServletContextConfig extends WebMvcConfigurationSupport {
 
     @Autowired
-    private ClientURLInterceptor clientURLInterceptor;
-    @Autowired
-    private AdminURLInterceptor adminURLInterceptor;
+    private URLInterceptor urlInterceptor;
+
 
     /**
      * 发现如果继承了WebMvcConfigurationSupport，则在yml中配置的相关内容会失效。
@@ -62,8 +60,9 @@ public class ServletContextConfig extends WebMvcConfigurationSupport {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(clientURLInterceptor).addPathPatterns("/client/**").excludePathPatterns(clientURLInterceptor.fullMatchURL);
-        registry.addInterceptor(adminURLInterceptor).addPathPatterns("/admin/**").excludePathPatterns(adminURLInterceptor.fullMatchURL);
+        registry.addInterceptor(urlInterceptor).excludePathPatterns(urlInterceptor.fullMatchURL);
+//        registry.addInterceptor(clientURLInterceptor).addPathPatterns("/client/**").excludePathPatterns(clientURLInterceptor.fullMatchURL);
+//        registry.addInterceptor(adminURLInterceptor).addPathPatterns("/admin/**").excludePathPatterns(adminURLInterceptor.fullMatchURL);
     }
 
     //全局配置，下发的LocalDateTime类型，转化格式为“yyyy-MM-dd HH:mm:ss”的字符串
@@ -76,9 +75,9 @@ public class ServletContextConfig extends WebMvcConfigurationSupport {
         objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
 //        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
         objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        objectMapper.setDateFormat(new SimpleDateFormat(Cons.DATETIME_FORMAT));
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(Cons.DATETIME_FORMAT)));
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         objectMapper.registerModule(javaTimeModule);
         jsonConverter.setObjectMapper(objectMapper);
         return jsonConverter;

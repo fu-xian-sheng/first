@@ -1,13 +1,15 @@
-package com.demo.kafka.kafkademo;
+package com.demo.test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
-public class KafkaDemoApplication {
+@EnableWebMvc
+public class FirstApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(KafkaDemoApplication.class, args);
+        SpringApplication.run(FirstApplication.class, args);
     }
 
 }

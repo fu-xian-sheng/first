@@ -1,26 +1,10 @@
-package com.noitom.filter;
+package com.demo.test.filter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.noitom.common.Cons;
-import com.noitom.config.AccountContext;
-import com.noitom.config.UserContext;
-import com.noitom.model.Response;
-import com.noitom.model.entity.OaAccount;
-import com.noitom.model.entity.User;
-import com.noitom.redis.RedisDao;
-import com.noitom.service.IOaAccountService;
-import com.noitom.service.IUserService;
-import com.noitom.utils.JwtUtils;
-import io.jsonwebtoken.Claims;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
@@ -36,21 +20,20 @@ import java.util.List;
  *
  */
 @Component
-public class ClientURLInterceptor implements HandlerInterceptor {
+public class URLInterceptor implements HandlerInterceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClientURLInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(URLInterceptor.class);
 
-    @Resource
-    IUserService userService;
+
 
 
     /**
      * URL 白名单
      */
     public List<String> fullMatchURL = new ArrayList<String>(){{
-        add("/client/login/**");//登录
-        add("/client/payment/wechat/notify/**");//支付回调
-        add("/client/public");//公共请求
+        add("/public/getInfo/**");//登录
+//        add("/client/payment/wechat/notify/**");//支付回调
+//        add("/client/public");//公共请求
     }} ;
 
 
@@ -66,22 +49,23 @@ public class ClientURLInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getServletPath();
         logger.info(path);
-        String token = request.getHeader(Cons.JWT_TOKEN);
-        if(token != null){
-            Claims claims =  JwtUtils.checkAdminJWT(token);
-            if(claims != null){
-                Integer userId = (Integer) claims.get(Cons.JWT_USER_ID);
-                User  user = userService.getById(userId);
-                if(user == null){
-                    sendJsonMessage(response, Response.buildError(Cons.ERR_CODE_LOGIN,Cons.MSG_LOGIN));
-                    return false;
-                }
-                UserContext.set(user);
-                return true;
-            }
-        }
-        sendJsonMessage(response, Response.buildError(Cons.ERR_CODE_LOGIN,Cons.MSG_LOGIN));
-        return false;
+//        String token = request.getHeader(Cons.JWT_TOKEN);
+//        if(token != null){
+//            Claims claims =  JwtUtils.checkAdminJWT(token);
+//            if(claims != null){
+//                Integer userId = (Integer) claims.get(Cons.JWT_USER_ID);
+//                User  user = userService.getById(userId);
+//                if(user == null){
+//                    sendJsonMessage(response, Response.buildError(Cons.ERR_CODE_LOGIN,Cons.MSG_LOGIN));
+//                    return false;
+//                }
+//                UserContext.set(user);
+//                return true;
+//            }
+//        }
+//        sendJsonMessage(response, Response.buildError(Cons.ERR_CODE_LOGIN,Cons.MSG_LOGIN));
+//        return false;
+        return true;
     }
 
     /**
@@ -108,6 +92,6 @@ public class ClientURLInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object object, Exception ex)
             throws Exception {
-        UserContext.remove();
+//        UserContext.remove();
     }
 }

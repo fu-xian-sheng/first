@@ -2,6 +2,6 @@ spring:
   profiles: qa
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.2.23:3306/hs3d?useUnicode=true&characterEncoding=utf8&useSSL=false
-    username: noitom
-    password: noitom
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
