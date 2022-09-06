@@ -17,7 +17,7 @@ public class PublicController {
 
     @GetMapping("/getInfo")
     public String getInfo(){
-        log.info("into");
+        log.info("into----");
         return "welcome to test Jenkins";
     }
 }
